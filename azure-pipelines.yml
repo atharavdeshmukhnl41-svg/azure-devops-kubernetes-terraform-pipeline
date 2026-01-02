@@ -11,6 +11,10 @@ pool: azureagent
 steps:
 - script: |
     echo K8 cluster
+    whoami
+    echo $PATH
+    ls -l /usr/bin/terraform
+    terraform version
     az version
   displayName: 'Run a one-line script'
 
