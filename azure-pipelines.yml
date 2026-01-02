@@ -39,6 +39,6 @@ steps:
 - task: TerraformCLI@2
   inputs:
     command: 'apply'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/iaac/azure/kubernetes'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/configuration/iaac/azure/kubernetes'
     commandOptions: '-var client_id=$(client_id) -var client_secret=$(client_secret) -var ssh_public_key=$(publickey.secureFilePath)'
   displayName: Create terraform cluster
