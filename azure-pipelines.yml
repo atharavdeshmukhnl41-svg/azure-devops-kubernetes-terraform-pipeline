@@ -1,7 +1,7 @@
 
 
-trigger:
-- master
+trigger: 
+ - master
 
 pool: azureagent
 
