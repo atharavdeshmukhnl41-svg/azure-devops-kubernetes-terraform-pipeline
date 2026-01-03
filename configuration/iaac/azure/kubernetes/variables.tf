@@ -1,8 +1,6 @@
 variable client_id {}
 variable client_secret {}
 variable ssh_public_key {}
-variable subscription_id {}
-variable tenant_id {}
 
 variable environment {
     default = "dev"
