@@ -1,43 +1,36 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
 trigger:
 - master
 
-pool:
-  name: azureagent
+pool: azureagent
 
 steps:
 - script: |
+    echo K8 cluster
     az version
-  displayName: Verify Azure CLI
+  displayName: 'Run a one-line script'
 
 - task: DownloadSecureFile@1
   name: publickey
   inputs:
-    secureFile: azure_rsa.pub
+    secureFile: 'azure_rsa.pub'
 
-# Terraform INIT
+
+
 - task: TerraformCLI@2
-  displayName: Terraform Init
   inputs:
-    command: init
-    workingDirectory: $(System.DefaultWorkingDirectory)/configuration/iaac/azure/kubernetes
-    backendType: azurerm
-    backendServiceArm: payasyougo(c02db223-ae2a-4677-943f-e5864c5361a3)
-    backendAzureRmResourceGroupName: terraform-backend-rg
-    backendAzureRmStorageAccountName: storageaccountatharvxyz
-    backendAzureRmContainerName: storageaccountcontainer
-    backendAzureRmKey: kubernetes-dev.tfstate
+    command: 'init'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/configuration/iaac/azure/kubernetes'
+    commandOptions: '-var client_id=$(client_id) -var client_secret=$(client_secret) -var ssh_public_key=$(publickey.secureFilePath)'
+    backendType: 'azurerm'
+    backendServiceArm: 'payasyougo(c02db223-ae2a-4677-943f-e5864c5361a3)'
     ensureBackend: true
-
-# Terraform APPLY
-- task: TerraformCLI@2
-  displayName: Create Kubernetes Cluster
-  inputs:
-    command: apply
-    workingDirectory: $(System.DefaultWorkingDirectory)/configuration/iaac/azure/kubernetes
-    environmentServiceNameAzureRM: payasyougo(c02db223-ae2a-4677-943f-e5864c5361a3)
-    commandOptions: >
-      -auto-approve
-      -lock-timeout=5m
-      -var client_id=$(client_id)
-      -var client_secret=$(client_secret)
-      -var ssh_public_key=$(publickey.secureFilePath)
+    backendAzureRmResourceGroupName: 'terraform-backend-rg'
+    backendAzureRmResourceGroupLocation: 'westeurope'
+    backendAzureRmStorageAccountName: 'storageaccountatharvxyz'
+    backendAzureRmContainerName: 'storageaccountcontainer'
+    backendAzureRmKey: 'kubernetes-dev.tfstate'
