@@ -1,16 +1,24 @@
-provider "azurerm" {
-  version = "~> 1.42"
-  client_id       = var.client_id   # ENVIRONMENT VARIABLE
-  client_secret   = var.client_secret # ENVIRONMENT VARIABLE
-  subscription_id = var.subscription_id
-  tenant_id       = var.tenant_id
+terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 4.0"
+    }
+  }
+
+  backend "azurerm" {}
 }
+
+provider "azurerm" {
+  features {}
+}
+
 resource "azurerm_resource_group" "resource_group" {
   name     = "${var.resource_group}_${var.environment}"
   location = var.location
 }
 
-resource "azurerm_kubernetes_cluster" "terraform-k8s" {
+resource "azurerm_kubernetes_cluster" "terraform_k8s" {
   name                = "${var.cluster_name}_${var.environment}"
   location            = azurerm_resource_group.resource_group.location
   resource_group_name = azurerm_resource_group.resource_group.name
@@ -25,26 +33,16 @@ resource "azurerm_kubernetes_cluster" "terraform-k8s" {
   }
 
   default_node_pool {
-    name            = "agentpool"
-    node_count      = var.node_count
-    vm_size         = "Standard_D2ps_v6"
+    name       = "agentpool"
+    node_count = var.node_count
+    vm_size    = "Standard_D2ps_v6"
   }
 
-  service_principal {
-    client_id     = var.client_id
-    client_secret = var.client_secret
+  identity {
+    type = "SystemAssigned"
   }
 
   tags = {
     Environment = var.environment
-  }
-}
-
-terraform {
-  backend "azurerm" {
-    # storage_account_name="<<storage_account_name>>" #OVERRIDE in TERRAFORM init
-    # access_key="<<storage_account_key>>" #OVERRIDE in TERRAFORM init
-    # key="<<env_name.k8s.tfstate>>" #OVERRIDE in TERRAFORM init
-    # container_name="<<storage_account_container_name>>" #OVERRIDE in TERRAFORM init
   }
 }
