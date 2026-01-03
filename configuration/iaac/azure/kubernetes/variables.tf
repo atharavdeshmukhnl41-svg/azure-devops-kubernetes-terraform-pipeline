@@ -1,27 +1,29 @@
-variable "resource_group" {
-  type = string
+variable client_id {}
+variable client_secret {}
+variable ssh_public_key {}
+
+variable environment {
+    default = "dev"
 }
 
-variable "environment" {
-  type = string
+variable location {
+    default = "westeurope"
 }
 
-variable "location" {
-  type = string
+variable node_count {
+  default = 2
 }
 
-variable "cluster_name" {
-  type = string
+
+
+variable dns_prefix {
+  default = "k8stest"
 }
 
-variable "dns_prefix" {
-  type = string
+variable cluster_name {
+  default = "k8stest"
 }
 
-variable "node_count" {
-  type = number
-}
-
-variable "ssh_public_key" {
-  type = string
+variable resource_group {
+  default = "kubernetes"
 }
