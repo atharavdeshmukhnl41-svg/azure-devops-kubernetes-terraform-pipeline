@@ -70,3 +70,6 @@ stages:
         namespace: 'default'
         manifests: '$(System.ArtifactsDirectory)/manifests/configuration/kubernetes/deployment.yaml'
         containers: 'in28min/currency-exchange-devops:$(tag)'
+        rolloutStatusTimeout: '300'
+        rolloutRestart: true
+        
