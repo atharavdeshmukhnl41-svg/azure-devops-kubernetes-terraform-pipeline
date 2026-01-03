@@ -17,7 +17,7 @@ steps:
 - task: DownloadSecureFile@1
   name: publickey
   inputs:
-    secureFile: 'azure_rsa.pub'
+    secureFile: 'azure_rsa[D[D[_[C[C[C[C[C[C[C[C[C[C[C.pub'
 
 
 
@@ -35,9 +35,9 @@ steps:
     backendAzureRmContainerName: 'storageaccountcontainer'
     backendAzureRmKey: 'kubernetes-dev.tfstate'
 
-- task: TerraformCLI@2
-  inputs:
-    command: 'apply'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/configuration/iaac/azure/kubernetes'
-    commandOptions: '-var subscription_id=$(subscription_id) -var tenant_id=$(tenant_id) -var client_id=$(client_id) -var client_secret=$(client_secret) -var ssh_public_key=$(publickey.secureFilePath)'
-  displayName: Create terraform cluster
+# - task: TerraformCLI@2
+#   inputs:
+#     command: 'apply'
+#     workingDirectory: '$(System.DefaultWorkingDirectory)/configuration/iaac/azure/kubernetes'
+#     commandOptions: '-var subscription_id=$(subscription_id) -var tenant_id=$(tenant_id) -var client_id=$(client_id) -var client_secret=$(client_secret) -var ssh_public_key=$(publickey.secureFilePath)'
+#   displayName: Create terraform cluster
