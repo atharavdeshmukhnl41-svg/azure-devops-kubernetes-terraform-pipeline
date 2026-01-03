@@ -1,3 +1,8 @@
 output "kube_config" {
-  value = module.azurerm_kubernetes_cluster.terraform-k8s.kube_config_raw
+  value     = azurerm_kubernetes_cluster.terraform-k8s.kube_config_raw
+  sensitive = true
+}
+
+output "host" {
+  value = azurerm_kubernetes_cluster.terraform-k8s.kube_config[0].host
 }

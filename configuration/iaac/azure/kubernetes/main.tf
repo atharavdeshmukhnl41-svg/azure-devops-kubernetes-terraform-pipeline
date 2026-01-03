@@ -1,34 +1,21 @@
-terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~> 4.0"
-    }
-  }
-
-  backend "azurerm" {}
-}
-
-provider "azurerm" {
-  features {}
-}
-
-resource "azurerm_resource_group" "resource_group" {
-  name     = "${var.resource_group}_${var.environment}"
-  location = var.location
-}
-
-resource "azurerm_kubernetes_cluster" "terraform_k8s" {
+resource "azurerm_kubernetes_cluster" "terraform-k8s" {
   name                = "${var.cluster_name}_${var.environment}"
   location            = azurerm_resource_group.resource_group.location
   resource_group_name = azurerm_resource_group.resource_group.name
   dns_prefix          = var.dns_prefix
+
+  private_cluster_enabled = false   # 👈 REQUIRED
+																  
+																		
+																	
+										
 
   linux_profile {
     admin_username = "ubuntu"
 
     ssh_key {
       key_data = file(var.ssh_public_key)
+	   
     }
   }
 
@@ -38,11 +25,22 @@ resource "azurerm_kubernetes_cluster" "terraform_k8s" {
     vm_size    = "Standard_D2ps_v6"
   }
 
-  identity {
-    type = "SystemAssigned"
+  service_principal {
+    client_id     = var.client_id
+    client_secret = var.client_secret
   }
 
   tags = {
     Environment = var.environment
+	 
   }
 }
+
+			 
+					   
+																				   
+																		
+																  
+																					   
+	 
+   
