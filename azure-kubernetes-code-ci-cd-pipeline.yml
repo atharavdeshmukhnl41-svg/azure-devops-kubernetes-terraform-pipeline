@@ -13,8 +13,7 @@ stages:
   jobs:  
   - job: Build
     displayName: Build
-    pool:
-      vmImage: ubuntu-latest
+    pool: azureagent
       
     steps:
     # - task: Docker@2
@@ -42,8 +41,7 @@ stages:
   jobs:  
   - job: Deploy
     displayName: Deploy
-    pool:
-      vmImage: ubuntu-latest
+    pool: azureagent
       
     steps:
 
@@ -63,3 +61,4 @@ stages:
         namespace: 'default'
         manifests: '$(System.ArtifactsDirectory)/manifests/configuration/kubernetes/deployment.yaml'
         containers: 'in28min/currency-exchange-devops:$(tag)'
+        arguments: --validate=false
