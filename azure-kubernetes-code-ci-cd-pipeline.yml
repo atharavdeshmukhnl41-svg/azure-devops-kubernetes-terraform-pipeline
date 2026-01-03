@@ -52,13 +52,21 @@ stages:
         artifactName: 'manifests'
         itemPattern: '**/*.yaml'
         downloadPath: '$(System.ArtifactsDirectory)'
+    
+    - script: | 
+        export KUBECONFIG=/home/atharv/.kube/config
+        kubectl config use-context k8stest_dev
+        kubectl get ns
+      displayName: 'Verify kubectl connectivity'
+
 
     - task: KubernetesManifest@1
       inputs:
         action: 'deploy'
-        connectionType: 'kubernetesServiceConnection'
-        kubernetesServiceConnection: 'azure-kubernetes-connection'
+        connectionType: 'azureResourceManager'
+        azureSubscriptionConnection: 'payasyougo(c02db223-ae2a-4677-943f-e5864c5361a3)'
+        azureResourceGroup: 'kubernetes_dev'
+        kubernetesCluster: 'k8stest_dev'
         namespace: 'default'
         manifests: '$(System.ArtifactsDirectory)/manifests/configuration/kubernetes/deployment.yaml'
         containers: 'in28min/currency-exchange-devops:$(tag)'
-        arguments: --validate=false
