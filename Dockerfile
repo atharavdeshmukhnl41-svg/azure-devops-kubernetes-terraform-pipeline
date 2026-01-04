@@ -3,7 +3,7 @@ WORKDIR /home/app
 COPY . /home/app
 RUN mvn -f /home/app/pom.xml clean package
 
-FROM FROM openjdk:8-jdk-slim
+FROM openjdk:8-jdk-slim
 VOLUME /tmp
 EXPOSE 5000
 COPY --from=build /home/app/target/*.jar app.jar
