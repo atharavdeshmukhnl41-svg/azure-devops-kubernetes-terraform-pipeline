@@ -21,6 +21,8 @@ spec:
       labels:
         app: currency-exchange
     spec:
+      nodeSelector:
+        kubernetes.io/arch: amd64  
       containers:
       - name: currency-exchange
         image: atharvdevops/currency-exchange-devops:$(tag)
