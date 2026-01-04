@@ -5,7 +5,7 @@ resources:
 - repo: self
 
 variables:
-  tag: 23 #'$(Build.BuildId)'
+  tag: '$(Build.BuildId)'
 
 stages:
 - stage: Build
@@ -16,13 +16,13 @@ stages:
     pool: azureagent
       
     steps:
-    # - task: Docker@2
-    #   inputs:
-    #     containerRegistry: 'in28min-docker-hub'
-    #     repository: 'in28min/currency-exchange-devops'
-    #     command: 'buildAndPush'
-    #     Dockerfile: '**/Dockerfile'
-    #     tags: '$(tag)'
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'docker-hub'
+        repository: 'in28min/currency-exchange-devops'
+        command: 'buildAndPush'
+        Dockerfile: '**/Dockerfile'
+        tags: '$(tag)'
     
     - task: CopyFiles@2
       inputs:
