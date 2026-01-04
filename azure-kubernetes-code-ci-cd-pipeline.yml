@@ -14,7 +14,7 @@ stages:
   - job: Build
     displayName: Build
     pool: azureagent
-
+    
     steps:
     - task: Maven@4
       inputs:
