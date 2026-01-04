@@ -27,7 +27,8 @@ spec:
       - name: currency-exchange
         image: atharvdevops/currency-exchange-devops:$(tag)
         imagePullPolicy: Always
-        ports:
+        ports:git commit
+
         - name: http
           containerPort: 8000
         resources:
