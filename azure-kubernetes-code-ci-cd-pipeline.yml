@@ -14,21 +14,21 @@ stages:
   - job: Build
     displayName: Build
     pool: azureagent
-    
+
     steps:
-    - task: Maven@4
-      inputs:
-        azureSubscription: 'payasyougo(c02db223-ae2a-4677-943f-e5864c5361a3)'
-        mavenPomFile: '$(System.DefaultWorkingDirectory)/pom.xml'
-        goals: 'test'
-        publishJUnitResults: true
-        testResultsFiles: '**/surefire-reports/TEST-*.xml'
-        javaHomeOption: 'JDKVersion'
-        mavenVersionOption: 'Default'
-        mavenAuthenticateFeed: false
-        effectivePomSkip: false
-        sonarQubeRunAnalysis: true
-        sqMavenPluginVersionChoice: 'latest'    
+    # - task: Maven@4
+    #   inputs:
+    #     azureSubscription: 'payasyougo(c02db223-ae2a-4677-943f-e5864c5361a3)'
+    #     mavenPomFile: '$(System.DefaultWorkingDirectory)/pom.xml'
+    #     goals: 'test'
+    #     publishJUnitResults: true
+    #     testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    #     javaHomeOption: 'JDKVersion'
+    #     mavenVersionOption: 'Default'
+    #     mavenAuthenticateFeed: false
+    #     effectivePomSkip: false
+    #     sonarQubeRunAnalysis: true
+    #     sqMavenPluginVersionChoice: 'latest'    
     - task: Docker@2
       inputs:
         containerRegistry: 'docker-hub'
