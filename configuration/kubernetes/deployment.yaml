@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: currency-exchange
   name: currency-exchange
   namespace: default
+  labels:
+    app: currency-exchange
 spec:
-  replicas: 1 #CHANGE
+  replicas: 1
   minReadySeconds: 45
   selector:
     matchLabels:
       app: currency-exchange
   strategy:
+    type: RollingUpdate
     rollingUpdate:
       maxSurge: 25%
       maxUnavailable: 25%
-    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -23,49 +23,49 @@ spec:
     spec:
       containers:
       - name: currency-exchange
-        image: atharvdevops/currency-exchange-devops:latest
-        imagePullPolicy: IfNotPresent
+        image: atharvdevops/currency-exchange-devops:$(tag)
+        imagePullPolicy: Always
         ports:
-        - name: liveness-port
+        - name: http
           containerPort: 8000
-        resources: #CHANGE
+        resources:
           requests:
             cpu: 100m
             memory: 512Mi
           limits:
             cpu: 500m
-            memory: 1024Mi #256Mi 
+            memory: 1024Mi
         readinessProbe:
           httpGet:
             path: /
-            port: liveness-port
-          failureThreshold: 5
+            port: http
+          initialDelaySeconds: 90
           periodSeconds: 10
-          initialDelaySeconds: 60
+          failureThreshold: 5
         livenessProbe:
           httpGet:
             path: /
-            port: liveness-port
-          failureThreshold: 5
+            port: http
+          initialDelaySeconds: 90
           periodSeconds: 10
-          initialDelaySeconds: 60
+          failureThreshold: 5
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  labels: #PODS
-    app: currency-exchange
   name: currency-exchange
   namespace: default
+  labels:
+    app: currency-exchange
 spec:
-  ports:
-  - # nodePort: 30702 #CHANGE
-    port: 8000 #CHANGE
-    protocol: TCP
-    targetPort: 8000 #CHANGE
+  type: LoadBalancer
   selector:
     app: currency-exchange
-  sessionAffinity: None #CHANGE
-  type: LoadBalancer
+  ports:
+  - port: 8000
+    targetPort: 8000
+    protocol: TCP
+    name: http
+  sessionAffinity: None
