@@ -38,7 +38,21 @@ stages:
         tags: '$(tag)'
         arguments: '--platform linux/arm64'
     
-    
+    - script: |
+        sudo apt-get update
+        sudo apt-get install -y wget
+        wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.50.1_Linux-64bit.deb
+        sudo dpkg -i trivy_0.50.1_Linux-64bit.deb
+      displayName: 'Install Trivy'
+
+    - script: |
+        trivy image \
+        --severity HIGH,CRITICAL \
+        --exit-code 1 \
+        atharvdevops/currency-exchange-devops:$(Build.BuildId)
+      displayName: 'Trivy Image Scan'
+
+
     - task: CopyFiles@2
       inputs:
         SourceFolder: '$(System.DefaultWorkingDirectory)'
@@ -52,6 +66,7 @@ stages:
         publishLocation: 'Container'
 
 - stage: Deploy
+  dependsOn: Build
   displayName: Deploy image
   jobs:  
   - job: Deploy
